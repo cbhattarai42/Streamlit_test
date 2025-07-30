@@ -2,7 +2,7 @@ import streamlit as st
 import io
 import pandas as pd
 import numpy as np
-from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.cluster import KMeans#, AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 from tslearn.clustering import TimeSeriesKMeans
 from tslearn.metrics import cdist_dtw
