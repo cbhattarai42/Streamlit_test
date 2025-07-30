@@ -2,3 +2,12 @@ streamlit
 pandas
 matplotlib
 openai
+io
+numpy
+sklearn
+tslearn
+geopy
+matplotlib
+math
+cartopy
+datetime
