@@ -221,7 +221,8 @@ def plot_clusters_with_basemap(df, labels, n_clusters, title_prefix, traj_ids):
         ax.set_title(f"{title_prefix} - Cluster {i+1} (n={count})")
         
         # Show both count and fraction in the text box
-        ax.text(0.05, 0.95, f'Count: {count}\nFraction: {fraction:.2%}', 
+        #ax.text(0.05, 0.95, f'Count: {count}\nFraction: {fraction:.2%}'
+        ax.text(0.05, 0.95, f'Fraction: {fraction:.2%}', 
                 transform=ax.transAxes, fontsize=11, verticalalignment='top',
                 bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
 
