@@ -89,27 +89,29 @@ def cluster_trajectories_Kmeans(df, n_clusters=4, random_state=50):
     return labels, trajectory_ids, kmeans
 
 # --- Clustering Methods ---
-def cluster_kmeans(features_df, n_clusters):
+def cluster_kmeans(features_df, n_clusters,random_state=42):
     features_df["x"] = np.cos(np.radians(features_df["angle"]))
     features_df["y"] = np.sin(np.radians(features_df["angle"]))
     X = StandardScaler().fit_transform(features_df[["x", "y", "distance"]])
-    km = KMeans(n_clusters=n_clusters, random_state=42)
+    #km = KMeans(n_clusters=n_clusters, random_state=42)
+    km = KMeans(n_clusters=n_clusters, random_state=random_state, n_init='auto')
     features_df["cluster"] = km.fit_predict(X)
     return features_df
 
-def cluster_dtw_kmeans(X, n_clusters):
+def cluster_dtw_kmeans(X, n_clusters, random_state=42):
     model = TimeSeriesKMeans(n_clusters=n_clusters, metric="dtw", random_state=42)
     labels = model.fit_predict(X)
     return labels
 
 def cluster_agglomerative_dtw(X, n_clusters):
     D = cdist_dtw(X)
-    model = AgglomerativeClustering(n_clusters=n_clusters, metric='precomputed', linkage='average')
+    #model = AgglomerativeClustering(n_clusters=n_clusters, metric='precomputed', linkage='average')
+    model = AgglomerativeClustering(n_clusters=n_clusters, affinity='precomputed', linkage='average')
     labels = model.fit_predict(D)
     return labels
 
-def cluster_softdtw_kmeans(X, n_clusters):
-    model = TimeSeriesKMeans(n_clusters=n_clusters, metric="softdtw", random_state=42)
+def cluster_softdtw_kmeans(X, n_clusters,random_state=42):
+    model = TimeSeriesKMeans(n_clusters=n_clusters, metric="softdtw", random_state=random_state)
     labels = model.fit_predict(X)
     return labels
 
@@ -301,8 +303,9 @@ def display_cluster_summary(labels, n_clusters):
     return summary_df
 
 # --- Streamlit App UI ---
-st.set_page_config("HYSPLIT Clustering", layout="wide")
+#st.set_page_config("HYSPLIT Clustering", layout="wide")
 st.title("🌬️ HYSPLIT Trajectory Cluster Explorer")
+st.set_page_config(page_title="HYSPLIT Clustering", layout="wide")
 
 uploaded_file = st.file_uploader("Upload HYSPLIT trajectory CSV", type="csv")
 if uploaded_file:
@@ -372,11 +375,11 @@ if uploaded_file:
                 # Prepare padded arrays for DTW-based clustering
                 X, traj_ids = prepare_trajectory_array(filtered_df)
                 if method == "DTW KMeans":
-                    labels = cluster_dtw_kmeans(X, n)
+                    labels = cluster_dtw_kmeans(X, n, random_state=randomstate)
                 elif method == "Agglomerative DTW":
                     labels = cluster_agglomerative_dtw(X, n)
                 elif method == "Soft-DTW KMeans":
-                    labels = cluster_softdtw_kmeans(X, n)
+                    labels = cluster_softdtw_kmeans(X, n, random_state=randomstate)
                 elif method =="Kmeans":
                     labels, traj_ids, kmeans_model = cluster_trajectories_Kmeans(filtered_df, n_clusters=n, random_state=randomstate)
                 
